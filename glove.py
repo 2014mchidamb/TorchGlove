@@ -82,7 +82,8 @@ for epoch in range(num_epochs):
 	for batch in range(num_batches):
 		optimizer.zero_grad()
 		l_vecs, r_vecs, covals, l_v_bias, r_v_bias = gen_batch()
-		loss = sum([torch.mul((torch.dot(l_vecs[i], r_vecs[i]) +
+		# For pytorch v2 use, .view(-1) in torch.dot here. Otherwise, no need to use .view(-1).
+		loss = sum([torch.mul((torch.dot(l_vecs[i].view(-1), r_vecs[i].view(-1)) +
 				l_v_bias[i] + r_v_bias[i] - np.log(covals[i]))**2,
 				wf(covals[i])) for i in range(batch_size)])
 		avg_loss += loss.data[0]/num_batches
